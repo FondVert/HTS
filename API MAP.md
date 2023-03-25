@@ -1,15 +1,15 @@
 # API
 ## Login
 Input
-- User
-- Password
+- User  "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
+- Password  "(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
 Output
 - Token
 ## Register
 Input
-- Name
-- User
-- Password
+- Name "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
+- User  "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
+- Password "(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
 Output
 - Token
 ## Post
