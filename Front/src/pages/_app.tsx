@@ -14,7 +14,7 @@ const oswald = Oswald({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-		<main className={`${roboto.variable} font-sans`}>
+		<main className={`${roboto.variable} font-sans bg-black`}>
 			<Component {...pageProps} />
 		</main>
 	)

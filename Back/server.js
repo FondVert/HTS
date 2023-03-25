@@ -11,7 +11,7 @@ const post = require('./module/post')
 testUsername = /^([a-zA-Z0-9_-]){2,32}$/
 testName = /^([a-zA-Z0-9 - é]){2,32}$/
 
-app.use(bodyParser.json({limit: '50mb'}))
+app.use(bodyParser.json({limit: '1mb'}))
 
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -64,17 +64,17 @@ app.post('/register', (req, res) => {
 })
 
 /**
- * @param title (max 15 char)
- * @param description
- * @param content
+ * @param form.title (max 15 char)
+ * @param form.description
+ * @param form.content
+ * @param image {string} base 64
  * @param token
  */
 app.post('/post', (req, res) => {
 	try {
-		console.log(req.body)
-    let userId = jwt.verify(req.body.token ,'undefined').id;
-		if(req.body.title && req.body.description && req.body.content && req.body.image && userId) {
-			post.newPost(req.body.title, req.body.description, req.body.content, req.body.image, userId, function(out) {
+    	let userId = jwt.verify(req.body.token ,'undefined').id;
+		if(req.body.form.title && req.body.form.description && req.body.form.content && req.body.image && userId) {
+			post.newPost(req.body.form.title, req.body.form.description, req.body.form.content, req.body.image, userId, function(out) {
 				res.status(200).json(out)
 			})
 		} else {
@@ -93,11 +93,18 @@ app.post('/post', (req, res) => {
 
 /**
  * @param postId
+ * @param token
  */
 app.get('/post', (req, res) => {
 	try {
+		let userId 
+		try {
+			userId= jwt.verify(req.body.token ,'undefined').id;
+		} catch (error) {
+			userId = 0
+		}
 		if(req.body.postId) {
-			post.getPost(req.body.postId, function(out) {
+			post.getPost(req.body.postId, userId, function(out) {
 				res.status(200).json(out)
 			})
 		} else {
@@ -122,7 +129,7 @@ app.get('/post', (req, res) => {
  */
 app.post('/post/vote', (req, res) => {
 	try {
-    let userId = jwt.verify(req.body.token ,'undefined').id;
+    	let userId = jwt.verify(req.body.token ,'undefined').id;
 
 		if(req.body.postId && userId && req.body.type && (req.body.type == 1 || req.body.type == 2)) {
 			post.vote(req.body.postId, userId, req.body.type, function(out) {
@@ -179,15 +186,22 @@ app.post('/post/save', (req, res) => {
  * @param sliceSize (opt) (10) la taille de la liste
  * @param orderType (opt) (0)  0: newlest, 1: oldest, 2: good, 3: bad
  * @param getSave   (opt) (false)
- * @param keywords {array} pour une recherche par mots clés
+ * @param keywords (o{array} pour une recherche par mots clés
  * 
  * @return les infos du post + hasSave (boolean) true si l'user lié au token à sauvegardé ce post
  */
-app.get('/post/list', (req, res) => {
+app.post('/post/list', (req, res) => {
 	try {
-    	let userId = jwt.verify(req.body.token ,'undefined').id;
+		let userId
+		try {
+			userId = jwt.verify(req.body.token ,'undefined').id;
+		} catch (error) {
+			userId = 0
+		}
+    	
 		
 		post.getList(userId, req.body.page, req.body.sliceSize, req.body.orderType, req.body.getSave, req.body.keywords, function(out) {
+			console.log(out)
 			res.status(200).json(out)
 		})
 		

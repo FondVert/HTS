@@ -2,7 +2,6 @@ const database = require('./../method/database')
 const jwt = require('jsonwebtoken')
 const bcrypt = require("bcrypt")
 
-
 function login(username, password, callback){
 	database.connect.query('SELECT userId, password FROM user WHERE username = ?', [username], function (err, result) {
 		if(result[0]) {

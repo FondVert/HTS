@@ -6,6 +6,15 @@ export default function AddPost() {
 	const [cookie, setCookie] = useCookies([""])
 	const [file, setFile] = useState<File | null>(null)
   const [base64, setBase64] = useState<string | null>(null)
+	const [formData, updateFormData] = useState()
+	const handleChange = (e) => {
+    updateFormData({
+      ...formData,
+      [e.target.name]: e.target.value.trim()
+    })
+  }
+
+
 	const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
@@ -33,6 +42,7 @@ export default function AddPost() {
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({
 				image: base64,
+				form: formData,
 				token: cookie.token
 			})
 		})
@@ -51,29 +61,29 @@ export default function AddPost() {
 
 		
 		<div>
-		<div class="flex items-center justify-center min-h-screen bg-[url('/assets/images/forest.png')]">
-			<div class="px-8 py-6 mt-7 text-left bg-white shadow-2xl md:rounded-3xl">
-				<h3 class="text-2xl font-medium text-center">Créer un post</h3>
+		<div className="flex items-center justify-center min-h-screen bg-[url('/assets/images/forest.png')]">
+			<div className="px-8 py-6 mt-7 text-left bg-black/50 backdrop-blur-md shadow-2xl rounded-3xl md:min-w-[30vw]">
+				<h3 className="text-2xl font-medium text-center text-white">Créer un post</h3>
 				<form onSubmit={handleSubmit}>
-					<div class="mt-7">
+					<div className="mt-7">
 						<div>
-							<label class="block" htmlFor="title">Titre</label>
-							<input type="text" name="title" placeholder="Titre" class="w-full px-4 py-2 mt-2 border rounded-full focus:outline-none focus:ring-1 focus:ring-green"/>
+							<label className="block text-white" htmlFor="title">Titre</label>
+							<input type="text" name="title" placeholder="Titre" className="text-white w-full px-4 py-2 mt-2 bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" onChange={handleChange}/>
 						</div>
-						<div class="mt-4">
-							<label class="block">Image</label>
-							<input class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="small_size" type="file" accept="image/*" onChange={onFileChange} onClick={onClick}/>
+						<div className="mt-4">
+							<label className="block text-white" htmlFor="description">Description</label>
+							<textarea name="description" type="text" placeholder="Description" className="text-white w-full px-4 py-2 mt-2 bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" onChange={handleChange}/>
 						</div>
-						<div class="mt-4">
-							<label class="block" htmlFor="description">Description</label>
-							<input type="text" placeholder="Description" class="w-full px-4 py-2 mt-2 border rounded-full focus:outline-none focus:ring-1 focus:ring-green"/>
+						<div className="mt-4">
+							<label className="block text-white" htmlFor="content">Contenu</label>
+							<textarea name="content" type="text" placeholder="Contenu" className="text-white w-full px-4 py-2 mt-2 h-[15vh] bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" onChange={handleChange}/>
 						</div>
-						<div class="mt-4">
-							<label class="block" htmlFor="content">Contenu</label>
-							<textarea name="content" type="text" placeholder="Contenu" class="w-full px-4 py-2 mt-2 border rounded-xl focus:outline-none focus:ring-1 focus:ring-green"/>
-						</div>
-						<div class="flex">
-						 <input type="submit" className="px-4 py-2 mt-7 text-white bg-dark_green rounded-full transition ease-in-out hover:scale-110 hover:bg-green duration-300"/>
+						{/* <div className="mt-4">
+							<label className="block text-white">Image</label>
+							<input className="text-white w-full px-4 py-2 mt-2 bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" id="small_size" type="file" accept="image/*" onChange={onFileChange} onClick={onClick}/>
+						</div> */}
+						<div className="flex justify-center">
+							<input type="submit" className="font-semibold mt-5 bg-gradient-to-t from-green to-green/70 hover:bg-green text-black drop-shadow-[0_0px_40px_rgba(16,196,78,1)] py-2 px-3 rounded-full hover:scale-110 else-in-out duration-200"/>
 						</div>
 					</div>
 				</form>

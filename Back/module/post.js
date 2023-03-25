@@ -1,6 +1,6 @@
 const database = require('./../method/database')
 
-function newPost(title, description, content, image, userId, callback){ // TODO: image
+function newPost(title, description, content, image, userId, callback){
 
 
 	database.connect.query('INSERT INTO post (userId, title, description, content, image) VALUES (?,?,?,?,?)', [userId, title, description, content, image], function (err, result) {
@@ -19,26 +19,41 @@ function newPost(title, description, content, image, userId, callback){ // TODO:
  	})
 }
 
-function getPost(postId, callback){
-	database.connect.query('SELECT `userId`,`title`,`description`,`content`,`creationDate` FROM `post` WHERE postId = ?', [postId], function (err, result) {
-	
-		if (result) {
+function getPost(postId, userId, callback){
+	database.connect.query(`SELECT post.*, hasSave.hasSave, user.username, nbrUp, nbrDown, (nbrUp - nbrDown) AS ratio  
+	FROM post JOIN user ON user.userId = post.userId 
+	LEFT JOIN (SELECT post.postId, COUNT(savePost.userId) AS hasSave
+	FROM user
+	CROSS JOIN post
+	LEFT JOIN savePost ON savePost.userId = user.userId AND savePost.postId = post.postId
+	WHERE user.userId = ${userId} 
+	GROUP BY post.postId) AS hasSave ON hasSave.postId = post.postId
+	JOIN upView ON upView.postId = post.postId 
+    JOIN downView ON downView.postId = post.postId
+	WHERE post.postId = ?`, [postId], function (err, result) {
+		
+		//console.log(err, result)
+		if (result.length) {
 			callback(Object.assign({
 				success: true
 			}, result[0]))
+		}else if(result){
+			callback({
+				success: false,
+				info: "Post not found"
+			})
 		} else {
 			callback({
 				success: false,
-				info: "post not found"
+				info: "Error when searching post"
 			})
 		}
 	})
 }
 
 function getList(userId = 0, page = 0, sliceSize = 10, orderType = 0, getSave = false, keywords, callback){
-	console.log(getSave)
 	let order
-	switch(orderType){
+	switch(orderType){ // 2: good, 3: bad
 		case 3:
 			break;
 		case 2:
@@ -48,20 +63,31 @@ function getList(userId = 0, page = 0, sliceSize = 10, orderType = 0, getSave = 
 		default:
 			order = 'ORDER BY creationDate DESC'
 	}
+	let research = '';
 	if(keywords && keywords[0]){
-		console.log(keywords)
+		for (let i = 0; i < keywords.length; i++) {
+			research += `post.title LIKE '%${keywords[i]}%' OR post.description LIKE '%${keywords[i]}%' OR user.username LIKE '%${keywords[i]}%'`;
+			if(i < keywords.length - 1) research += ' OR '
+		}
 	}
 
-	database.connect.query(`SELECT * FROM post
+	database.connect.query(
+	`SELECT DISTINCT post.*, hasSave.hasSave, user.username, nbrUp, nbrDown, (nbrUp - nbrDown) AS ratio 
+	FROM post JOIN user ON user.userId = post.userId
 	LEFT JOIN (SELECT post.postId, COUNT(savePost.userId) AS hasSave
 	FROM user
 	CROSS JOIN post
 	LEFT JOIN savePost ON savePost.userId = user.userId AND savePost.postId = post.postId
 	WHERE user.userId = ${userId} 
 	GROUP BY post.postId) AS hasSave ON hasSave.postId = post.postId
+	JOIN upView ON upView.postId = post.postId 
+    JOIN downView ON downView.postId = post.postId
 	${getSave? 'WHERE hasSave.hasSave = 1':''}
-	${order} LIMIT ${page*sliceSize}, ${sliceSize}`, function (err, result) {
-	
+	${!getSave && research? 'WHERE':'' /* ajouter le where si il n'a pas été ajouté avec la save */}
+	${research}
+	${order} LIMIT ${page*sliceSize}, ${sliceSize}`, 
+	function (err, result) {
+		console.log(result, err)
 		callback({
 			success: true,
 			data: result
