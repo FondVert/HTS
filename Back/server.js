@@ -11,7 +11,7 @@ const post = require('./module/post')
 testUsername = /^([a-zA-Z0-9_-]){2,32}$/
 testName = /^([a-zA-Z0-9 - é]){2,32}$/
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '50mb'}))
 
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -71,10 +71,10 @@ app.post('/register', (req, res) => {
  */
 app.post('/post', (req, res) => {
 	try {
+		console.log(req.body)
     let userId = jwt.verify(req.body.token ,'undefined').id;
-    console.log(req.cookies, userId)
-		if(req.body.title && req.body.description && req.body.content && userId) {
-			post.newPost(req.body.title, req.body.description, req.body.content, userId, function(out) {
+		if(req.body.title && req.body.description && req.body.content && req.body.image && userId) {
+			post.newPost(req.body.title, req.body.description, req.body.content, req.body.image, userId, function(out) {
 				res.status(200).json(out)
 			})
 		} else {
@@ -154,7 +154,7 @@ app.post('/post/vote', (req, res) => {
  */
 app.post('/post/save', (req, res) => {
 	try {
-    let userId = jwt.verify(req.body.token ,'undefined').id;
+    	let userId = jwt.verify(req.body.token ,'undefined').id;
 		if(req.body.postId && userId) {
 			post.save(req.body.postId, userId, function(out) {
 				res.status(200).json(out)
@@ -165,6 +165,34 @@ app.post('/post/save', (req, res) => {
 			})
 		}
 	} catch (err) {
+		res.status(200).json({
+			success: false,
+			info: "invalid input"
+		})
+	}
+})
+
+/**	
+ * @param token 
+ * 					   (default)
+ * @param page      (opt) (0) le numéro de la page
+ * @param sliceSize (opt) (10) la taille de la liste
+ * @param orderType (opt) (0)  0: newlest, 1: oldest, 2: good, 3: bad
+ * @param getSave   (opt) (false)
+ * @param keywords {array} pour une recherche par mots clés
+ * 
+ * @return les infos du post + hasSave (boolean) true si l'user lié au token à sauvegardé ce post
+ */
+app.get('/post/list', (req, res) => {
+	try {
+    	let userId = jwt.verify(req.body.token ,'undefined').id;
+		
+		post.getList(userId, req.body.page, req.body.sliceSize, req.body.orderType, req.body.getSave, req.body.keywords, function(out) {
+			res.status(200).json(out)
+		})
+		
+	} catch (err) {
+		console.log(err)
 		res.status(200).json({
 			success: false,
 			info: "invalid input"

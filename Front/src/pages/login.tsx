@@ -14,7 +14,7 @@ export default function Login() {
   }
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		fetch("http://localhost:5000/login", {
+		fetch("http://10.20.30.50:5000/login", {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(formData)

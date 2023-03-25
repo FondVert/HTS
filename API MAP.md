@@ -1,18 +1,18 @@
 # API
-## Login
+## Login (V)
 Input
 - User  "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
 - Password  "(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
 Output
 - Token
-## Register
+## Register (V)
 Input
 - Name "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
 - User  "\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+"
 - Password "(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
 Output
 - Token
-## Post
+## Post (V)
 Input
 - Title
 - Description
@@ -21,11 +21,11 @@ Input
 - Token
 Output
 - Post ID
-## Vote
+## Vote (V)
 Input
 - type (0:reset, 1:good, 2:bad)
 - Token
-## GetList
+## GetList (V)
 Input
 - Type (newlest, oldest, good, bad)
 - Token
@@ -37,13 +37,13 @@ Input
 - Token
 Output
 - Data
-## GetPost
+## GetPost (V)
 Input
 - Post ID
 - Token
 Output
 - Data (Image ID, Title, Description, Content, Ratio, Time)
-## Save
+## Save (V)
 Input
 - Post ID
 - Token
@@ -53,7 +53,7 @@ Input
 - Token
 Output
 - row data (b64)
-## GetSave
+## GetSave (V)
 Input
 - Token
 Output
