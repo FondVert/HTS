@@ -2,12 +2,12 @@ const database = require('./../method/database')
 const jwt = require('jsonwebtoken')
 const bcrypt = require("bcrypt")
 
+
 function login(username, password, callback){
 	database.connect.query('SELECT userId, password FROM user WHERE username = ?', [username], function (err, result) {
-		console.log(result)
 		if(result[0]) {
-			bcrypt.compare(password, result[0].password, function(err, result) {
-				if (result) {
+			bcrypt.compare(password, result[0].password, function(err, bResult) {
+				if (bResult) {
 					let token = jwt.sign(
 						{id: result[0].userId},
 						'undefined',
@@ -35,10 +35,10 @@ function login(username, password, callback){
 
 function register(username, name, password, callback){
 	database.connect.query('SELECT userId FROM user WHERE username = ?', [username], function (err, result) {
-		// console.log(result)
 		if(!result[0]) {
 			bcrypt.hash(password, 10, function(err, hash) {
-				database.connect.query('INSERT INTO `user`(`username, `name`, `password`) VALUES (?,?,?)', [username, name, hash], function (err, result) {
+				database.connect.query('INSERT INTO user (username, name, password) VALUES (?,?,?)', [username, name, hash], function (err, result) {
+					if (err) throw err;
 					console.log(hash)
 				})
 			})

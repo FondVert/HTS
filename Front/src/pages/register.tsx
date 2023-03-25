@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { useState, useEffect } from "react"
+import { useCookies } from "react-cookie"
+import Router from "next/router";
 
 export default function Register() {
+	const [cookie, setCookie] = useCookies([""])
 	const [formData, updateFormData] = useState()
 	const handleChange = (e) => {
     updateFormData({
@@ -21,8 +24,15 @@ export default function Register() {
 		})
 		.then(data => {
 			console.log(data)
-			if(data.succefull==true) {
-				console.log("Success")
+			if(data.success==true) {
+				if(data.token) {
+					setCookie("token", data.token, {
+						path: "/",
+						maxAge: 3600*24,
+						sameSite: true,
+					})
+				}
+				Router.push("/dashboard")
 			}
 		})
 	}

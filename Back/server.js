@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken')
 const app = express()
 const port = 5000
 
@@ -16,24 +17,13 @@ app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
-});
-
-app.get('/', (req, res) => {
-  res.status(200).send(test.hello())
-})
-
-app.post('/', (req, res) => {
-	console.log(req.body)
-	res.status(200).json({
-		'success': true,
-		'name': req.body.name ? req.body.name : "Téo"
-	})
 })
 
 /**
  * envoie moi un form-data
  * @param name le nom de l'user
  * @param password le password
+ * @add un cookie 'token' qui stocke le token
  */
 app.post('/login', (req, res) => {
 	try {
@@ -57,7 +47,7 @@ app.post('/login', (req, res) => {
 app.post('/register', (req, res) => {
 	try {
 		if(req.body.username && req.body.name && req.body.password && testUsername.test(req.body.username) && testName.test(req.body.name)) {
-			user.register(req.body.username, req.body.user, req.body.password, function(out) {
+			user.register(req.body.username, req.body.name, req.body.password, function(out) {
 				res.status(200).json(out)
 			})
 		} else {
@@ -73,13 +63,74 @@ app.post('/register', (req, res) => {
 	}
 })
 
+/**
+ * @param title (max 15 char)
+ * @param description
+ * @param content
+ * @add le token dans les cookies (nom : token)
+ */
 app.post('/post', (req, res) => {
 	try {
-		if(req.body.username && req.body.password && testUsername.test(req.body.username)) {
-			res.status(200).json(post.newPost(req.body.title, req.body.description, req.body.content, function(out) {
+    let userId = jwt.verify(req.cookies.token ,'undefined').id;
+    console.log(req.cookies, userId)
+		if(req.body.title && req.body.description && req.body.content && userId) {
+			post.newPost(req.body.title, req.body.description, req.body.content, userId, function(out) {
 				res.status(200).json(out)
-			})) // title, description, content, userId, callback
+			})
 		} else {
+			res.status(200).json({
+				success: false
+			})
+		}
+	} catch (err) {
+    console.log(err)
+		res.status(200).json({
+			success: false,
+			info: "invalid input"
+		})
+	}
+})
+
+/**
+ * @param popstId
+ */
+app.get('/post', (req, res) => {
+	try {
+		if(req.body.postId) {
+			post.getPost(req.body.postId, function(out) {
+				res.status(200).json(out)
+			})
+		} else {
+			res.status(200).json({
+				success: false
+			})
+		}
+	} catch (err) {
+		res.status(200).json({
+			success: false,
+			info: "invalid input"
+		})
+	}
+})
+
+/**
+ * @param postId
+ * @param type {number} (0:reset, 1:good, 2:bad)
+ * @add le token dans un cookie nommé "token"
+ */
+app.post('/post/vote', (req, res) => {
+	try {
+    let userId = jwt.verify(req.cookies.token ,'undefined').id;
+
+		if(req.body.postId && userId && req.body.type && req.body.type == 1 && req.body.type == 2) {
+			post.vote(req.body.postId, userId, req.body.type, function(out) {
+				res.status(200).json(out)
+			})
+		}else if(req.body.postId && userId && req.body.type && req.body.type == 0){
+      post.removeVote(req.body.postId, userId, function(out) {
+				res.status(200).json(out)
+			})
+    } else {
 			res.status(200).json({
 				success: false
 			})
@@ -95,4 +146,5 @@ app.post('/post', (req, res) => {
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
+
 
