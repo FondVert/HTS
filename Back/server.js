@@ -23,7 +23,7 @@ app.use((req, res, next) => {
  * envoie moi un form-data
  * @param name le nom de l'user
  * @param password le password
- * @add un cookie 'token' qui stocke le token
+ * @return un token pour authentification
  */
 app.post('/login', (req, res) => {
 	try {
@@ -67,11 +67,11 @@ app.post('/register', (req, res) => {
  * @param title (max 15 char)
  * @param description
  * @param content
- * @add le token dans les cookies (nom : token)
+ * @param token
  */
 app.post('/post', (req, res) => {
 	try {
-    let userId = jwt.verify(req.cookies.token ,'undefined').id;
+    let userId = jwt.verify(req.body.token ,'undefined').id;
     console.log(req.cookies, userId)
 		if(req.body.title && req.body.description && req.body.content && userId) {
 			post.newPost(req.body.title, req.body.description, req.body.content, userId, function(out) {
@@ -92,7 +92,7 @@ app.post('/post', (req, res) => {
 })
 
 /**
- * @param popstId
+ * @param postId
  */
 app.get('/post', (req, res) => {
 	try {
@@ -114,23 +114,52 @@ app.get('/post', (req, res) => {
 })
 
 /**
+ * create, update or remove a vote
  * @param postId
  * @param type {number} (0:reset, 1:good, 2:bad)
- * @add le token dans un cookie nommé "token"
+ * @param token
+ * @return if the type of the save done (if success)
  */
 app.post('/post/vote', (req, res) => {
 	try {
-    let userId = jwt.verify(req.cookies.token ,'undefined').id;
+    let userId = jwt.verify(req.body.token ,'undefined').id;
 
-		if(req.body.postId && userId && req.body.type && req.body.type == 1 && req.body.type == 2) {
+		if(req.body.postId && userId && req.body.type && (req.body.type == 1 || req.body.type == 2)) {
 			post.vote(req.body.postId, userId, req.body.type, function(out) {
 				res.status(200).json(out)
 			})
-		}else if(req.body.postId && userId && req.body.type && req.body.type == 0){
+		}else if(req.body.postId && userId && req.body.type == 0){
       post.removeVote(req.body.postId, userId, function(out) {
 				res.status(200).json(out)
 			})
     } else {
+			res.status(200).json({
+				success: false
+			})
+		}
+	} catch (err) {
+    console.log(err)
+		res.status(200).json({
+			success: false,
+			info: "invalid input"
+		})
+	}
+})
+
+/**
+ * create a save or delete a save if already exist
+ * @param postId
+ * @param token
+ * @return if a save was created (1) or removed (0)
+ */
+app.post('/post/save', (req, res) => {
+	try {
+    let userId = jwt.verify(req.body.token ,'undefined').id;
+		if(req.body.postId && userId) {
+			post.save(req.body.postId, userId, function(out) {
+				res.status(200).json(out)
+			})
+		} else {
 			res.status(200).json({
 				success: false
 			})

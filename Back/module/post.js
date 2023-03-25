@@ -35,44 +35,99 @@ function getPost(postId, callback){
 	})
 }
 
-function vote(postId, userID, type, callback){
-	database.connect.query('INSERT INTO `votePost`(`postId`, `userId`, `isUpVote`) VALUES (?,?,?)', ...arguments, function (err, result) {
-		console.log(result)
+function vote(postId, userId, type, callback){
+	database.connect.query('INSERT INTO `votePost`(`postId`, `userId`, `type`) VALUES (?,?,?)', [postId, userId, type], function (err, result) {
 		
 		if (result) {
-			callback(Object.assign({
-				success: true
-			}, result[0]))
-		} else {
+			callback({
+				success: true,
+				type
+			})
+		} else if(err.errno && err.errno == 1062){ // already exist
+			database.connect.query('UPDATE `votePost` SET `type`= ? WHERE postId = ? AND userId = ?', [type, postId, userId], function (err, result) {
+				console.log(result, err)
+				if(result && result.changedRows == 0){
+					callback({
+						success: false,
+						info: "the vote already exists"
+					})
+				}else if (result) {
+					callback({
+						success: true,
+						type
+					})
+				}else {
+					callback({
+						success: false,
+						info: "error when updating the vote"
+					})
+				}
+			})
+		}else {
 			callback({
 				success: false,
-				info: "error"
+				info: "error when creating the vote"
 			})
 		}
 	})
 }
 
 function removeVote(postId, userId, callback){
-    database.connect.query('deleteINSERT INTO `votePost`(`postId`, `userId`, `isUpVote`) VALUES (?,?,?)', ...arguments, function (err, result) {
-        console.log(result)
-        
-        if (result) {
-            callback(Object.assign({
-                success: true
-            }, result[0]))
-        } else {
-            callback({
-                success: false,
-                info: "error"
-            })
-        }
+	database.connect.query('DELETE FROM `votePost` WHERE postId = ? AND userId = ?', [postId, userId], function (err, result) {
+		console.log(result)
+		
+		if (result) {
+			callback({
+				success: true,
+				type: 0
+			})
+		} else {
+			callback({
+				success: false,
+				info: "error when deleting the vote"
+			})
+		}
 	})
 }
 
+function save(postId, userId, callback){
+	database.connect.query('INSERT INTO `savePost`(`postId`, `userId`) VALUES (?,?)', [postId, userId], function (err, result) {
+		
+		if (result) {
+			callback({
+				success: true,
+				type: 1,
+				typeText: 'newSave'
+			})
+		} else if(err && err.errno == 1062){ // already exists
+			database.connect.query('DELETE FROM `savePost` WHERE postId = ? AND userId = ?', [postId, userId], function (err, result) {
+				
+				if (result) {
+					callback({
+						success: true,
+						type: 0,
+						typeText: 'deletedSave'
+					})	
+				} else {
+					callback({
+						success: false,
+						info: "error when saving the post"
+					})
+				}
+			})
+		} else {
+			callback({
+				success: false,
+				info: "error when saving the post"
+			})
+		}
+	})
+}
 
 module.exports = {
 	newPost,
 	getPost,
 	vote,
-	removeVote		
+	removeVote,
+	save	
 }

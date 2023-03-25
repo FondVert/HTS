@@ -38,12 +38,25 @@ export default function Login() {
 		})
 	}
   return (
-    <>
-      <form onSubmit={handleSubmit}>
-				<input name="username" type="text" placeholder='Username' onChange={handleChange}/>
-				<input name="password" type="password" placeholder='Password' onChange={handleChange}/>
-				<input type="submit" />
-			</form>
-    </>
+    <div className="flex items-center justify-center min-h-screen bg-[url('/assets/images/forest.png')]">
+			<div className="px-8 py-6 mt-7 text-left bg-white shadow-2xl md:rounded-3xl">
+				<h3 className="text-2xl font-medium text-center">Se connecter</h3>
+				<form onSubmit={handleSubmit}>
+					<div className="mt-7">
+						<div className="mt-4">
+							<label className="block" htmlFor="email">Pseudo</label>
+							<input name="username" type="text" placeholder='Pseudo' onChange={handleChange} className="w-full px-4 py-2 mt-2 border rounded-full focus:outline-none focus:ring-1 focus:ring-green"/>
+						</div>
+						<div className="mt-4">
+							<label className="block" htmlFor="password">Mot de passe</label>
+							<input name="password" type="password" placeholder='Mot de passe' onChange={handleChange} className="w-full px-4 py-2 mt-2 border rounded-full focus:outline-none focus:ring-1 focus:ring-green"/>
+						</div>
+						<div className="flex items-baseline">
+							<input type="submit" className="px-4 py-2 mt-7 text-white bg-dark_green rounded-full transition ease-in-out hover:scale-110 hover:bg-green duration-300"/>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
   )
 }

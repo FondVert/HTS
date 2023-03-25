@@ -39,7 +39,9 @@ function register(username, name, password, callback){
 			bcrypt.hash(password, 10, function(err, hash) {
 				database.connect.query('INSERT INTO user (username, name, password) VALUES (?,?,?)', [username, name, hash], function (err, result) {
 					if (err) throw err;
-					console.log(hash)
+					login(username, password, function(out) {
+						callback(out)
+					})
 				})
 			})
 		} else {

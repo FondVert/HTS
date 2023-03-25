@@ -1,11 +1,13 @@
 import Link from 'next/link'
+import Navbar from '../../../components/navbar'
 
-export default function Home() {
+export default function Dashboard() {
   return (
     <>
-       <Link href={`/login`}> Login</Link>
+			<Navbar/>
+       {/* <Link href={`/login`}> Login</Link>
 			 <br/>
-			 <Link href={`/register`}>Register</Link>
+			 <Link href={`/register`}>Register</Link> */}
     </>
   )
 }
