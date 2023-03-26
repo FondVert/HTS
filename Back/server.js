@@ -20,7 +20,6 @@ app.use((req, res, next) => {
 })
 
 /**
- * envoie moi un form-data
  * @param name le nom de l'user
  * @param password le password
  * @return un token pour authentification
@@ -67,14 +66,14 @@ app.post('/register', (req, res) => {
  * @param form.title (max 15 char)
  * @param form.description
  * @param form.content
- * @param image {string} base 64
  * @param token
+ * @return insertId 
  */
 app.post('/post', (req, res) => {
 	try {
     	let userId = jwt.verify(req.body.token ,'undefined').id;
-		if(req.body.form.title && req.body.form.description && req.body.form.content && req.body.image && userId) {
-			post.newPost(req.body.form.title, req.body.form.description, req.body.form.content, req.body.image, userId, function(out) {
+		if(req.body.form && req.body.form.title && req.body.form.description && req.body.form.content && userId) {
+			post.newPost(req.body.form.title, req.body.form.description, req.body.form.content, userId, function(out) {
 				res.status(200).json(out)
 			})
 		} else {
@@ -95,7 +94,7 @@ app.post('/post', (req, res) => {
  * @param postId
  * @param token
  */
-app.get('/post', (req, res) => {
+app.post('/getPost', (req, res) => {
 	try {
 		let userId 
 		try {
@@ -201,7 +200,6 @@ app.post('/post/list', (req, res) => {
     	
 		
 		post.getList(userId, req.body.page, req.body.sliceSize, req.body.orderType, req.body.getSave, req.body.keywords, function(out) {
-			console.log(out)
 			res.status(200).json(out)
 		})
 		

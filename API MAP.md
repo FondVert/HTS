@@ -31,7 +31,7 @@ Input
 - Token
 Output
 - Data (Image ID, Title, Description, Ratio, Time)
-## Search
+## Search (V)
 Input
 - Keyword
 - Token
@@ -47,7 +47,7 @@ Output
 Input
 - Post ID
 - Token
-## ViewImage
+## ViewImage (?)
 Input
 - Post ID
 - Token

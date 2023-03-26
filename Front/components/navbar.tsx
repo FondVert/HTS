@@ -5,7 +5,7 @@ export default function Navbar() {
   return (
     <div className="bg-white backdrop-blur-xl z-50 w-full drop-shadow-[0_0px_50px_rgba(255,255,255,0.5)] bg-center ">
 			<nav id="main-nav" className="max-w-7xl mx-auto p-5 flex items-center justify-between">
-					<Link href="#top" className="font-semibold text-4xl md:text-3xl oswald">
+					<Link href="/dashboard" className="font-semibold text-4xl md:text-3xl oswald">
 						<span className="font-light hidden md:inline ">HOW TO </span><span className="hidden md:inline font-semibold text-dark_green">SURVIVE</span>
 						<span className="font-light md:hidden">HT</span><span className="md:hidden font-semibold text-dark_green">S</span>
 					</Link>

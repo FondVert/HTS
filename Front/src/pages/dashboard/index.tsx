@@ -15,7 +15,7 @@ export default function Dashboard() {
 			cache: 'no-store',
 			body: JSON.stringify({
 				page: 0,
-				sliceSize: 10,
+				sliceSize: 1000,
 				orderType: 0,
 				getSave: false,
 				token: cookie.token
@@ -39,17 +39,19 @@ export default function Dashboard() {
 			{articles.length > 0 && (
         <ul>
 					{articles.map(article => (
-						<div key={article.postId} className="mt-10 w-[85vw] md:max-w-7xl gap-6 md:h-[30vh] bg-brown/5 cursor-pointer flex flex-col md:flex-row hover:bg-brown/10 p-6 mx-auto rounded-3xl else-in-out duration-200">
-							<img src="assets/images/forest.png" alt="" className="h-full aspect-square rounded-3xl object-cover"/>
-							<div className="rounded-3xl bg-white p-5 md:p-8 w-full">
-								<h1 className="text-dark_green font-bold text-3xl">
-									{article.title}
-								</h1>
-								<p className="text-lg">
-									{article.description}
-								</p>
+						<Link href={"/dashboard/post/"+article.postId} key={article.postId}>
+							<div className="mt-10 w-[85vw] md:max-w-7xl gap-6 md:h-[30vh] bg-white/10 cursor-pointer flex flex-col md:flex-row hover:bg-white/20 p-6 mx-auto rounded-3xl else-in-out duration-200">
+								<img src="assets/images/forest.png" alt="" className="h-full aspect-square rounded-3xl object-cover"/>
+								<div className="rounded-3xl bg-white/10 p-5 md:p-8 w-full">
+									<h1 className="text-green drop-shadow-[0_0px_30px_rgba(16,196,78,1)] font-bold text-3xl">
+										{article.title}
+									</h1>
+									<p className="mt-1 text-lg text-white">
+										{article.description}
+									</p>
+								</div>
 							</div>
-						</div>
+						</Link>
 					))}
 				</ul>
       )}

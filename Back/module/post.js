@@ -1,10 +1,10 @@
 const database = require('./../method/database')
 
-function newPost(title, description, content, image, userId, callback){
+function newPost(title, description, content, userId, callback){
 
 
-	database.connect.query('INSERT INTO post (userId, title, description, content, image) VALUES (?,?,?,?,?)', [userId, title, description, content, image], function (err, result) {
-		
+	database.connect.query('INSERT INTO post (userId, title, description, content) VALUES (?,?,?,?)', [userId, title, description, content], function (err, result) {
+		console.log(err)
 		if(result){
 			callback({
 				success: true,
@@ -20,7 +20,7 @@ function newPost(title, description, content, image, userId, callback){
 }
 
 function getPost(postId, userId, callback){
-	database.connect.query(`SELECT post.*, hasSave.hasSave, user.username, nbrUp, nbrDown, (nbrUp - nbrDown) AS ratio  
+	database.connect.query(`SELECT post.*, user.username, hasSave.hasSave, IFNULL(votePost.type,0) AS voteType, nbrUp, nbrDown, (nbrUp - nbrDown) AS ratio  
 	FROM post JOIN user ON user.userId = post.userId 
 	LEFT JOIN (SELECT post.postId, COUNT(savePost.userId) AS hasSave
 	FROM user
@@ -30,6 +30,7 @@ function getPost(postId, userId, callback){
 	GROUP BY post.postId) AS hasSave ON hasSave.postId = post.postId
 	JOIN upView ON upView.postId = post.postId 
     JOIN downView ON downView.postId = post.postId
+	LEFT JOIN votePost ON votePost.postId = post.postId AND votePost.userId = ${userId}
 	WHERE post.postId = ?`, [postId], function (err, result) {
 		
 		//console.log(err, result)
@@ -53,11 +54,11 @@ function getPost(postId, userId, callback){
 
 function getList(userId = 0, page = 0, sliceSize = 10, orderType = 0, getSave = false, keywords, callback){
 	let order
-	switch(orderType){ // 2: good, 3: bad
+	switch(orderType){
 		case 3:
-			break;
+			order = 'ORDER BY nbrDown DESC'; break;
 		case 2:
-			break;
+			order = 'ORDER BY nbrUp DESC'; break;
 		case 1:
 			order = 'ORDER BY creationDate ASC'; break
 		default:
@@ -87,7 +88,6 @@ function getList(userId = 0, page = 0, sliceSize = 10, orderType = 0, getSave = 
 	${research}
 	${order} LIMIT ${page*sliceSize}, ${sliceSize}`, 
 	function (err, result) {
-		console.log(result, err)
 		callback({
 			success: true,
 			data: result
@@ -99,24 +99,28 @@ function getList(userId = 0, page = 0, sliceSize = 10, orderType = 0, getSave = 
 function vote(postId, userId, type, callback){
 	database.connect.query('INSERT INTO `votePost`(`postId`, `userId`, `type`) VALUES (?,?,?)', [postId, userId, type], function (err, result) {
 		
+		// console.log(err, result)
 		if (result) {
 			callback({
 				success: true,
 				type
 			})
+			console.log(`vote ${postId} - ${userId} created`)
 		} else if(err.errno && err.errno == 1062){ // already exist
 			database.connect.query('UPDATE `votePost` SET `type`= ? WHERE postId = ? AND userId = ?', [type, postId, userId], function (err, result) {
-				console.log(result, err)
+				// console.log(result, err)
 				if(result && result.changedRows == 0){
 					callback({
 						success: false,
 						info: "the vote already exists"
 					})
+					console.log(`vote ${postId} - ${userId} (${type}) already exists`)
 				}else if (result) {
 					callback({
 						success: true,
 						type
 					})
+					console.log(`vote ${postId} - ${userId} updated`)
 				}else {
 					callback({
 						success: false,
@@ -135,14 +139,14 @@ function vote(postId, userId, type, callback){
 
 function removeVote(postId, userId, callback){
 	database.connect.query('DELETE FROM `votePost` WHERE postId = ? AND userId = ?', [postId, userId], function (err, result) {
-		console.log(result)
+		// console.log(result)
 		
 		if (result) {
 			callback({
 				success: true,
-				
 				type: 0
 			})
+			console.log(`vote ${postId} - ${userId} deleted`)
 		} else {
 			callback({
 				success: false,
