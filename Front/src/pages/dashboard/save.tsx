@@ -58,7 +58,7 @@ export default function Save() {
 					))}
 				</ul>
       ) : (
-				<h1 className='text-center p-5 text-white/40 font-semibold text-3xl'>Vous n'avez aucun article enrgistré</h1>
+				<h1 className='text-center p-5 text-white/40 font-semibold text-3xl'>Vous n&apos;avez aucun article enrgistré</h1>
 			)}
     </div>
   )

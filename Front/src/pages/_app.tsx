@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import { Roboto, Oswald } from 'next/font/google'
+import Head from 'next/head'
 
 const roboto = Roboto({
   weight: '400',
@@ -14,8 +15,13 @@ const oswald = Oswald({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-		<main className={`${roboto.variable} font-sans bg-black`}>
+		<>
+		<Head>
+      <title>HOW TO SURVIVE</title>
+    </Head>
+		<main className={`${roboto.className} font-sans bg-black`}>
 			<Component {...pageProps} />
 		</main>
+		</>
 	)
 }

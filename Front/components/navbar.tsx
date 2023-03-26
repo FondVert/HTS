@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FaPlus, FaStar, FaRegUserCircle, FaSearch } from 'react-icons/fa'
+import { FaPlus, FaStar, FaRegUserCircle, FaSearch, FaDoorOpen } from 'react-icons/fa'
 
 export default function Navbar() {
   return (
@@ -14,7 +14,7 @@ export default function Navbar() {
 							<Link href="/dashboard/addPost"><FaPlus className="fa-solid fa-star text-4xl text-brown hover:text-dark_green hover:scale-110 else-in-out duration-200"/></Link>
 							<Link href="/dashboard/search"><FaSearch className="fa-solid fa-star text-4xl text-brown hover:text-dark_green hover:scale-110 else-in-out duration-200"/></Link>
 							<Link href="/dashboard/save"><FaStar className="fa-solid fa-star text-4xl text-brown hover:text-dark_green hover:scale-110 else-in-out duration-200"/></Link>
-							<Link href="/"><FaRegUserCircle className="fa-solid fa-star text-4xl text-brown hover:text-dark_green hover:scale-110 else-in-out duration-200"/></Link>
+							<Link href="/"><FaDoorOpen className="fa-solid fa-star text-4xl text-brown hover:text-dark_green hover:scale-110 else-in-out duration-200"/></Link>
 					</div>
 			</nav>
 		</div>

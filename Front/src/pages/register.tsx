@@ -42,7 +42,7 @@ export default function Register() {
   return (
 		<div className="flex items-center justify-center min-h-screen bg-[url('/assets/images/forest.png')]">
 			<div className="px-8 py-6 min-w-[90vw] md:min-w-[20vw] mt-7 text-left backdrop-blur-md bg-black/50 shadow-2xl rounded-3xl ">
-				<h3 className="text-2xl font-medium text-center text-white">S'inscrire</h3>
+				<h3 className="text-2xl font-medium text-center text-white">S&apos;inscrire</h3>
 				<form onSubmit={handleSubmit}>
 					<div className="mt-7">
 						<div>

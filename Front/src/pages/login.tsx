@@ -56,7 +56,7 @@ export default function Login() {
 						</div>
 						<div className="flex justify-between items-center">
 							<input type="submit" className="font-semibold mt-5 bg-gradient-to-t from-green to-green/70 hover:bg-green text-black drop-shadow-[0_0px_40px_rgba(16,196,78,1)] py-2 px-3 rounded-full hover:scale-110 else-in-out duration-200"/>
-							<Link href="/register" className='mt-5 mr-5 drop-shadow-[0_0px_10px_rgba(16,196,78,1)] text-green hover:scale-110 else-in-out duration-200'>S'inscrire</Link>
+							<Link href="/register" className='mt-5 mr-5 drop-shadow-[0_0px_10px_rgba(16,196,78,1)] text-green hover:scale-110 else-in-out duration-200'>S&apos;inscrire</Link>
 						</div>
 					</div>
 					<p className='text-red-500 font-bold pt-4 drop-shadow-[0_0px_10px_rgba(235,7,49,1)]'>{error}</p>
