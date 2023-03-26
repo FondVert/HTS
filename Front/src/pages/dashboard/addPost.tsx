@@ -72,11 +72,11 @@ export default function AddPost() {
 						</div>
 						<div className="mt-4">
 							<label className="block text-white" htmlFor="description">Description</label>
-							<textarea name="description" type="text" placeholder="Description" maxlength="170" className="text-white w-full px-4 py-2 mt-2 bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" onChange={handleChange}/>
+							<textarea name="description" type="text" placeholder="Description" maxlength="300" className="text-white w-full px-4 py-2 mt-2 bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" onChange={handleChange}/>
 						</div>
 						<div className="mt-4">
 							<label className="block text-white" htmlFor="content">Contenu</label>
-							<textarea name="content" type="text" placeholder="Contenu" maxlength="750" className="text-white w-full px-4 py-2 mt-2 h-[15vh] bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" onChange={handleChange}/>
+							<textarea name="content" type="text" placeholder="Contenu" maxlength="1750" className="text-white w-full px-4 py-2 mt-2 h-[15vh] bg-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-green else-in-out duration-200" onChange={handleChange}/>
 						</div>
 						{/* <div className="mt-4">
 							<label className="block text-white">Image</label>

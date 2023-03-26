@@ -12,7 +12,7 @@ export default function Save() {
 	const [article, setArticle] = useState([])
 	const [classBtn, setClassBtn] = useState([])
 	const router = useRouter()
-  const { id } = router.query
+	const { id } = router.query
 
 	const getData = () => {
 		fetch("http://10.20.30.50:5000/getPost", {
@@ -29,6 +29,7 @@ export default function Save() {
       })
       .then(data => {
         setArticle(data)
+				console.log(data)
 				if(data.voteType == 1) {
 					setClassBtn({
 						bad: "text-white/50",
@@ -50,10 +51,6 @@ export default function Save() {
 				}
       })
 	}
-
-	useEffect(() => {
-		getData()
-	}, [])
 
 	const goodClick = () => {
 		let type = 1
@@ -134,10 +131,14 @@ export default function Save() {
 		router.back()
 	}
 
+	useEffect(() => {
+		getData()
+	}, [])
+
   return (
 		<div className='min-h-screen'>
 			<Navbar/>
-			<div className="p-8 md:max-w-7xl mx-auto">
+			{article && (<div className="p-8 md:max-w-7xl mx-auto">
 				<div className="flex justify-between">
 					<div className="text-2xl text-white flex flex-inline items-center gap-3">
 						<img src="../../assets/images/user_placeholder.png" alt="" className="h-[5.5vh] rounded-full"/>
@@ -175,7 +176,7 @@ export default function Save() {
 						<AiFillSmile className="text-3xl"/>
 					</button>
 				</div>
-			</div>
+			</div>)}
 		</div>
   )
 }

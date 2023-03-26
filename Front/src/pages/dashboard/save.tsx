@@ -36,7 +36,10 @@ export default function Dashboard() {
   return (
     <div className='min-h-screen'>
 			<Navbar/>
-			{articles.length > 0 && (
+      <div className='max-w-7xl mx-auto'>
+        <h1 className='pt-5 pl-5 text-white font-semibold text-2xl'>Articles sauvegardés</h1>
+      </div>
+			{articles.length > 0 ? (
         <ul>
 					{articles.map(article => (
 						<Link href={"/dashboard/post/"+article.postId} key={article.postId}>
@@ -54,7 +57,9 @@ export default function Dashboard() {
 						</Link>
 					))}
 				</ul>
-      )}
+      ) : (
+				<h1 className='text-center p-5 text-white/40 font-semibold text-3xl'>Vous n'avez aucun article enrgistré</h1>
+			)}
     </div>
   )
 }
