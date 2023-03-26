@@ -3,21 +3,21 @@ import Navbar from '../../../components/navbar'
 import { useCookies } from "react-cookie"
 import React, { useEffect, useState } from "react"
 
-export default function Save() {
+export default function Search() {
 	const [cookie, setCookie] = useCookies([""])
 	const [articles, setArticles] = useState([])
 
-
-	const getData = () => {
+	const handleChange = (e) => {
 		fetch("http://10.20.30.50:5000/post/list", {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			cache: 'no-store',
 			body: JSON.stringify({
 				page: 0,
-				sliceSize: 1000,
+				sliceSize: 10,
 				orderType: 0,
-				getSave: true,
+				getSave: false,
+				keywords: e.target.value.split(" "),
 				token: cookie.token
 			})
 		})
@@ -27,19 +27,18 @@ export default function Save() {
       .then(data => {
         setArticles(data.data)
       })
-	}
-
-	useEffect(() => {
-		getData()
-	}, [])
+  }
 
   return (
     <div className='min-h-screen pb-10'>
 			<Navbar/>
       <div className='max-w-7xl mx-auto'>
-        <h1 className='pt-5 pl-5 text-white font-semibold text-2xl'>Articles sauvegardés</h1>
+        <h1 className='pt-5 pl-5 text-white font-semibold text-2xl'>Recherche</h1>
       </div>
-			{articles.length > 0 ? (
+	  <div className='max-w-7xl p-5 flex mx-auto'>
+			<input type="text" className='w-full p-3 rounded-full bg-white/10 text-white focus:outline-none focus:ring-2 drop-shadow-[0_0px_30px_rgba(16,196,78,1)] focus:ring-green else-in-out duration-200' name="search" placeholder='Rechercher ici' onChange={handleChange}/>
+	  </div>
+		{articles.length > 0 ? (
         <ul>
 					{articles.map(article => (
 						<Link href={"/dashboard/post/"+article.postId} key={article.postId}>
@@ -58,7 +57,7 @@ export default function Save() {
 					))}
 				</ul>
       ) : (
-				<h1 className='text-center p-5 text-white/40 font-semibold text-3xl'>Vous n'avez aucun article enrgistré</h1>
+				<h1 className='text-center p-5 text-white/40 font-semibold text-3xl'>Aucun résultat</h1>
 			)}
     </div>
   )

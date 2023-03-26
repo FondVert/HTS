@@ -19,7 +19,7 @@ export default function Dashboard() {
 			body: JSON.stringify({
 				page: 0,
 				sliceSize: 1000,
-				orderType: search,
+				orderType: 0,
 				getSave: false,
 				token: cookie.token
 			})
@@ -37,30 +37,94 @@ export default function Dashboard() {
 	}
 
 	const searchNew = () => {
-		setSearch(0)
 		setIsOpen(!isOpen)
-		getData()
+		fetch("http://10.20.30.50:5000/post/list", {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			cache: 'no-store',
+			body: JSON.stringify({
+				page: 0,
+				sliceSize: 1000,
+				orderType: 0,
+				getSave: false,
+				token: cookie.token
+			})
+		})
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setArticles(data.data)
+      })
 	}
 
 
 	const searchBest = () => {
-		setSearch(2)
 		setIsOpen(!isOpen)
-		getData()
+		fetch("http://10.20.30.50:5000/post/list", {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			cache: 'no-store',
+			body: JSON.stringify({
+				page: 0,
+				sliceSize: 1000,
+				orderType: 2,
+				getSave: false,
+				token: cookie.token
+			})
+		})
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setArticles(data.data)
+      })
 	}
 
 
 	const searchOld = () => {
-		setSearch(1)
 		setIsOpen(!isOpen)
-		getData()
+		fetch("http://10.20.30.50:5000/post/list", {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			cache: 'no-store',
+			body: JSON.stringify({
+				page: 0,
+				sliceSize: 1000,
+				orderType: 1,
+				getSave: false,
+				token: cookie.token
+			})
+		})
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setArticles(data.data)
+      })
 	}
 
 
 	const searchBad = () => {
-		setSearch(3)
 		setIsOpen(!isOpen)
-		getData()
+		fetch("http://10.20.30.50:5000/post/list", {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			cache: 'no-store',
+			body: JSON.stringify({
+				page: 0,
+				sliceSize: 1000,
+				orderType: 3,
+				getSave: false,
+				token: cookie.token
+			})
+		})
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        setArticles(data.data)
+      })
 	}
 
 
@@ -111,8 +175,8 @@ export default function Dashboard() {
      		</div>
 					{articles.map(article => (
 						<Link href={"/dashboard/post/"+article.postId} key={article.postId}>
-							<div className="z-[10] mt-10 w-[85vw] md:max-w-7xl gap-6 md:h-[30vh] bg-white/10 cursor-pointer flex flex-col md:flex-row hover:bg-white/20 p-6 mx-auto rounded-3xl ease-in-out duration-200">
-								<img src="assets/images/forest.png" alt="" className="h-full aspect-square rounded-3xl object-cover"/>
+							<div className="z-[10] mt-10 w-[85vw] md:max-w-7xl gap-6 md:h-[30vh] bg-white/10 cursor-pointer flex flex-col md:flex-row hover:bg-white/[13%] p-6 mx-auto rounded-3xl ease-in-out duration-200">
+								<img src="../assets/images/forest.png" alt="" className="h-full aspect-square rounded-3xl object-cover"/>
 								<div className="rounded-3xl bg-white/10 p-5 md:p-8 w-full">
 									<h1 className="text-green drop-shadow-[0_0px_30px_rgba(16,196,78,1)] font-bold text-3xl">
 										{article.title}

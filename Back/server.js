@@ -63,7 +63,7 @@ app.post('/register', (req, res) => {
 })
 
 /**
- * @param form.title (max 15 char)
+ * @param form.title (max 150 char)
  * @param form.description
  * @param form.content
  * @param token
@@ -185,7 +185,7 @@ app.post('/post/save', (req, res) => {
  * @param sliceSize (opt) (10) la taille de la liste
  * @param orderType (opt) (0)  0: newlest, 1: oldest, 2: good, 3: bad
  * @param getSave   (opt) (false)
- * @param keywords (o{array} pour une recherche par mots clés
+ * @param keywords {array} pour une recherche par mots clés
  * 
  * @return les infos du post + hasSave (boolean) true si l'user lié au token à sauvegardé ce post
  */

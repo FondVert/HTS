@@ -34,19 +34,19 @@ export default function Save() {
 					setClassBtn({
 						bad: "text-white/50",
 						good: "text-white",
-						save: data.hasSave ? "text-white" : "text-white/50"
+						save: data.hasSave ? "text-green drop-shadow-[0_0px_10px_rgba(16,196,78,1)]" : "text-white drop-shadow-[0_0px_30px_rgba(255,255,255,1)]"
 					})
 				} else if (data.voteType == 2) {
 					setClassBtn({
 						bad: "text-white",
 						good: "text-white/50",
-						save: data.hasSave ? "text-white" : "text-white/50"
+						save: data.hasSave ? "text-green drop-shadow-[0_0px_10px_rgba(16,196,78,1)]" : "text-white drop-shadow-[0_0px_30px_rgba(255,255,255,1)]"
 					})
 				} else {
 					setClassBtn({
 						bad: "text-white/50",
 						good: "text-white/50",
-						save: data.hasSave ? "text-white" : "text-white/50"
+						save: data.hasSave ? "text-green drop-shadow-[0_0px_10px_rgba(16,196,78,1)]" : "text-white drop-shadow-[0_0px_30px_rgba(255,255,255,1)]"
 					})
 				}
       })
@@ -146,7 +146,7 @@ export default function Save() {
 					</div>
 					<div className='flex gap-10'>
 						<RiArrowGoBackFill onClick={backward} className="text-3xl text-white drop-shadow-[0_0px_30px_rgba(255,255,255,1)] cursor-pointer flex my-auto hover:scale-110 ease-in-out duration-300"/>
-						<FaRegStar onClick={saveClick} className={"text-3xl drop-shadow-[0_0px_30px_rgba(255,255,255,1)] cursor-pointer flex my-auto hover:scale-110 ease-in-out duration-300 " + classBtn.save}/>
+						<FaRegStar onClick={saveClick} className={"text-3xl cursor-pointer flex my-auto hover:scale-110 ease-in-out duration-300 " + classBtn.save}/>
 					</div>
 				</div>
 				<div className="mt-7 gap-6 md:h-[50vh] bg-white/10 flex flex-col md:flex-row p-6 rounded-3xl">
